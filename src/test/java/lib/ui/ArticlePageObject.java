@@ -1,4 +1,5 @@
 package lib.ui;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -23,15 +24,26 @@ public class ArticlePageObject extends MainPageObject
         return this.waitForElementPresent(TITLE, "Cannot find article title on page", 5);
     }
 
-    public String getArticleTitle()
-    {
+    public String getArticleTitle() {
         WebElement titleElement = waitForTitleElement();
-        return titleElement.getAttribute("text");
+        if(Platform.getInstance().isAndroid()){
+            return titleElement.getAttribute("text");
+        } else if(Platform.getInstance().isMW()){
+            return titleElement.getText();
+        } else {
+            return "Method getArticleTitle() does nothing for Platform - " + Platform.getInstance().getPlatformVar();
+        }
     }
 
     public void swipeToFooter()
     {
-        this.swipeUpToFindElement(FOOTER_ELEMENT, "Cannot find the end of article", 20);
+        if(Platform.getInstance().isAndroid()){
+            this.swipeUpToFindElement(FOOTER_ELEMENT, "Cannot find the end of article", 40);
+        } else if(Platform.getInstance().isMW()){
+            this.scrollWebPageTillElementNotVisible(FOOTER_ELEMENT, "Cannot find the end of article", 40);
+        } else {
+            System.out.println("Method swipeToFooter() does nothis for platform - " + Platform.getInstance().getPlatformVar());
+        }
     }
 
     public ArticlePageObject clickSavedIconAndClickOverlay()

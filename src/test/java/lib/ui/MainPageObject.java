@@ -5,6 +5,7 @@ import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -77,6 +78,39 @@ public class MainPageObject
         By by = this.getLocatorByString(locator);
         List<WebElement> list = _driver.findElements(by);
         return list.size();
+    }
+
+    public void scrollWebPageUp(){
+        if(Platform.getInstance().isMW()){
+            JavascriptExecutor jsExec = (JavascriptExecutor) _driver;
+            jsExec.executeScript("window.scrollBy(0, 250)");
+        } else {
+            System.out.println("Method scrollWebPageUp() does nothing for platform - " + Platform.getInstance().getPlatformVar());
+        }
+    }
+
+    public boolean isElementLocatedOnTheScreen(String locator){
+        int elementLocationByY = this.waitForElementPresent(locator, "Cannot find element by locator", 10).getLocation().getY();
+        if (Platform.getInstance().isMW()){
+            JavascriptExecutor jsExec = (JavascriptExecutor) _driver;
+            Object jsResult = jsExec.executeScript("return window.pageYOffset");
+            elementLocationByY -= Integer.parseInt(jsResult.toString());
+        }
+        int screenSizeByWindow = _driver.manage().window().getSize().getHeight();
+        return elementLocationByY < screenSizeByWindow;
+    }
+
+    public void scrollWebPageTillElementNotVisible(String locator, String errorMessage, int maxSwipes){
+        int alreadySwiped = 0;
+
+        WebElement element = this.waitForElementPresent(locator, errorMessage);
+        while (!this.isElementLocatedOnTheScreen(locator)){
+            scrollWebPageUp();
+            ++alreadySwiped;
+            if(alreadySwiped > maxSwipes){
+                Assert.assertTrue(errorMessage, element.isDisplayed());
+            }
+        }
     }
 
     public boolean isElementDisplayed(String locator)

@@ -52,7 +52,7 @@ public class ArticleTests extends CoreTestCase
                 .clickSkipButton()
                 .initSearchInput()
                 .typeSearchLine("Java")
-                .clickByArticleWithSubstring("Java (programming language)");
+                .clickByArticleWithSubstring("Object-oriented programming language");
 
         //for testing
         try
