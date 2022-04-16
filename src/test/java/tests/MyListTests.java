@@ -83,25 +83,64 @@ public class MyListTests extends CoreTestCase
 
         ArticlePageObject.waitForTitleElement();
 
-        ArticlePageObject.addArticleToMyList(folderForSaving);
+        if(Platform.getInstance().isAndroid()){
+            ArticlePageObject.addArticleToMyList(folderForSaving);
 
-        NavigationUI.clickBackButton();
+            NavigationUI.clickBackButton();
 
-        SearchPageObject.clickByArticleWithSubstring(articleName2);
+            SearchPageObject.clickByArticleWithSubstring(articleName2);
 
-        ArticlePageObject.waitForTitleElement();
+            ArticlePageObject.waitForTitleElement();
 
-        ArticlePageObject
-                .clickSavedIconAndClickOverlay()
-                .moveToSpecifiedFolder(folderForSaving)
-                .moveToListWithSavedArticles();
+            ArticlePageObject
+                    .clickSavedIconAndClickOverlay()
+                    .moveToSpecifiedFolder(folderForSaving)
+                    .moveToListWithSavedArticles();
 
-        MyListPageObject
-                .swipeByArticleToDelete(articleName2)
-                .openArticleByTitle(articleName1);
+            MyListPageObject
+                    .swipeByArticleToDelete(articleName2)
+                    .openArticleByTitle(articleName1);
 
-        String actualTitleName = ArticlePageObject.getArticleTitle();
+            String actualTitleName = ArticlePageObject.getArticleTitle();
 
-        assertEquals("Actual article name is not equal to expected one", articleName1, actualTitleName);
+            assertEquals("Actual article name is not equal to expected one", articleName1, actualTitleName);
+        } else if (Platform.getInstance().isMW()){
+            ArticlePageObject.addArticleToMySaved();
+            AuthorizationPageObject authorization = new AuthorizationPageObject(_driver);
+            authorization
+                    .clickAuthButton()
+                    .enterLoginData("Dmtestdm", "123456789a1")
+                    .submitForm();
+
+            NavigationUI.clickBackPreviousPage();
+
+            ArticlePageObject.waitForTitleElement();
+
+            assertEquals("We are not on the same page after login.",
+                    articleName1,
+                    ArticlePageObject.getArticleTitle());
+
+            SearchPageObject
+                    .clickSkipButton()
+                    .initSearchInput()
+                    .typeSearchLine(searchValue)
+                    .clickByArticleWithSubstring(articleName2);;
+
+            ArticlePageObject.waitForTitleElement();
+
+            ArticlePageObject.addArticleToMySaved();
+
+            NavigationUI
+                    .openNavigation()
+                    .clickMySavedArticles();
+
+            MyListPageObject.waitForArticleToAppearByTitle(articleName1);
+            MyListPageObject.waitForArticleToAppearByTitle(articleName2);
+            MyListPageObject.swipeByArticleToDelete(articleName1);
+            MyListPageObject.waitForArticleToDisappearByTitle(articleName1);
+            MyListPageObject.waitForArticleToAppearByTitle(articleName2);
+        } else {
+            System.out.println("Only Android and WebMobile are supported");
+        }
     }
 }

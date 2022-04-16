@@ -76,6 +76,9 @@ public class ArticlePageObject extends MainPageObject
                     OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
                     "Cannot click button to remove an article from saved",
                     5);
+            this.waitForElementNotPresent(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
+                    "Saved icon is not changed",
+                    5);
         }
         this.waitForElementPresent(
                 OPTION_ADD_TO_MY_LIST_BUTTON,

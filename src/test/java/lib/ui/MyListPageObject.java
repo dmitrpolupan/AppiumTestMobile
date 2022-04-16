@@ -46,6 +46,7 @@ public class MyListPageObject extends MainPageObject
         if(Platform.getInstance().isMW()) {
             String removeLocator = getRemoveButtonByTitle(articleTitle);
             this.waitForElementAndClick(removeLocator, "Cannot find and click remove button", 5);
+            this.waitForElementNotPresent(removeLocator, "Saved icon is not disappeared", 5);
             _driver.navigate().refresh();
         } else {
             this.swipeElementToLeft(articleTitleXpath,"Cannot Swipe element");

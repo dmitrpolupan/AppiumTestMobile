@@ -13,7 +13,7 @@ public class MWArticlePageObject extends ArticlePageObject
         MY_LIST_OK_BUTTON = "xpath://*[@text = 'OK']";
         MY_LIST_FOLDER_NAME = "xpath://*[@resource-id='org.wikipedia:id/lists_container']//*[@text='{FOLDER_NAME}']";
         FOOTER_ELEMENT = "css:footer.mw-footer"; //+
-        OPTIONS_REMOVE_FROM_MY_LIST_BUTTON = "css:#page-actions [title='Remove this page from your watchlist']";
+        OPTIONS_REMOVE_FROM_MY_LIST_BUTTON = "css:#page-actions a#ca-watch.watch-this-article.watched";
     }
 
     public MWArticlePageObject(RemoteWebDriver driver){
