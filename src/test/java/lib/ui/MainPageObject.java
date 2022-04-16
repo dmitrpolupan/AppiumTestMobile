@@ -31,6 +31,32 @@ public class MainPageObject
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
+    public WebElement waitForElementClickable(String locator, String errorMessage, long timeoutInSeconds)
+    {
+        By by = this.getLocatorByString(locator);
+        WebDriverWait wait = new WebDriverWait(_driver, timeoutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(ExpectedConditions.elementToBeClickable(by));
+    }
+
+    public void tryClickElementWithFewAttempts(String locator, String errorMessage, int amountOfAttempts)
+    {
+        int currentAttempt = 0;
+        boolean needMoreAttempt = true;
+
+        while (needMoreAttempt){
+            try {
+                this.waitForElementAndClick(locator, errorMessage, 1);
+                needMoreAttempt = false;
+            } catch (Exception e){
+                if(currentAttempt > amountOfAttempts){
+                    this.waitForElementAndClick(locator, errorMessage, 1);
+                }
+            }
+            ++currentAttempt;
+        }
+    }
+
     public WebElement waitForElementPresent(String locator, String errorMessage)
     {
         return waitForElementPresent(locator, errorMessage, 5);
@@ -127,6 +153,11 @@ public class MainPageObject
         }
 
         return flag;
+    }
+
+    public boolean isElementPresent(String locator)
+    {
+        return getCountOfWebElements(locator, "Cannot find element", 5) > 0;
     }
 
     public List<String> getArticlesName(String locator, String errorMessage, long timeoutInSeconds)

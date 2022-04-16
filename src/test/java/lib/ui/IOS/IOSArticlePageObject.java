@@ -6,7 +6,7 @@ public class IOSArticlePageObject extends ArticlePageObject
 {
     static {
         TITLE = "xpath:test";
-        SAVED_ICON = "xpath:test";
+        OPTION_ADD_TO_MY_LIST_BUTTON = "xpath:test";
         ADD_TO_MY_LIST_OVERLAY = "xpath:test";
         MY_LIST_NAME_INPUT = "xpath:test";
         MY_LIST_OK_BUTTON = "xpath:test";

@@ -3,6 +3,7 @@ import lib.Platform;
 import lib.ui.IOS.IOSNavigationUIPageObject;
 import lib.ui.NavigationUIPageObject;
 import lib.ui.android.AndroidNavigationUIPageObject;
+import lib.ui.mobile_web.MWNavigationUIPageObject;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class NavigationUIPageObjectFactory
@@ -11,8 +12,10 @@ public class NavigationUIPageObjectFactory
     {
         if(Platform.getInstance().isAndroid()){
             return new AndroidNavigationUIPageObject(driver);
-        } else {
+        } else if(Platform.getInstance().isIOS()) {
             return new IOSNavigationUIPageObject(driver);
+        } else {
+            return new MWNavigationUIPageObject(driver);
         }
     }
 }

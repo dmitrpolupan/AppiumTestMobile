@@ -7,7 +7,7 @@ public class AndroidArticlePageObject extends ArticlePageObject
     static
     {
         TITLE = "xpath://*[@resource-id='pcs']/android.view.View[1]/android.view.View[1]";
-        SAVED_ICON = "id:article_menu_bookmark";
+        OPTION_ADD_TO_MY_LIST_BUTTON = "id:article_menu_bookmark";
         ADD_TO_MY_LIST_OVERLAY = "id:snackbar_action";
         MY_LIST_NAME_INPUT = "id:text_input";
         MY_LIST_OK_BUTTON = "xpath://*[@text = 'OK']";

@@ -1,20 +1,18 @@
 package tests;
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListPageObject;
-import lib.ui.NavigationUIPageObject;
-import lib.ui.SearchPageObject;
+import lib.Platform;
+import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListPageObjectFactory;
 import lib.ui.factories.NavigationUIPageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MyListTests extends CoreTestCase
 {
     @Test
-    public void testSaveFirstArticleToMyList()
-    {
+    public void testSaveFirstArticleToMyList() {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(_driver);
         ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(_driver);
         NavigationUIPageObject NavigationUI = NavigationUIPageObjectFactory.get(_driver);
@@ -31,11 +29,29 @@ public class MyListTests extends CoreTestCase
 
         ArticlePageObject.waitForTitleElement();
 
-        ArticlePageObject.addArticleToMyList(savedName);
+        if(Platform.getInstance().isAndroid()){
+            ArticlePageObject.addArticleToMyList(savedName);
+        } else {
+            ArticlePageObject.addArticleToMySaved();
+            AuthorizationPageObject authorization = new AuthorizationPageObject(_driver);
+            authorization
+                    .clickAuthButton()
+                    .enterLoginData("Dmtestdm", "123456789a1")
+                    .submitForm();
+
+            NavigationUI.clickBackPreviousPage();
+
+            ArticlePageObject.waitForTitleElement();
+
+            assertEquals("We are not on the same page after login.",
+                    articleName,
+                    ArticlePageObject.getArticleTitle());
+        }
 
         NavigationUI
                 .clickBackButton()
                 .clickBackButton()
+                .openNavigation()
                 .clickMySavedArticles();
 
         MyListPageObject

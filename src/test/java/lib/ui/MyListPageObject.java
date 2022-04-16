@@ -1,4 +1,5 @@
 package lib.ui;
+import lib.Platform;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class MyListPageObject extends MainPageObject
@@ -6,7 +7,8 @@ public class MyListPageObject extends MainPageObject
     protected static String
             MY_LIST_NOT_NOW_BUTTON,
             FOLDER_BY_NAME_TPL,
-            ARTICLE_TITLE_TPL;
+            ARTICLE_TITLE_TPL,
+            REMOVE_FROM_SAVE_BUTTON;
 
     public MyListPageObject(RemoteWebDriver driver)
     {
@@ -15,15 +17,24 @@ public class MyListPageObject extends MainPageObject
 
     public MyListPageObject clickNotNowButton()
     {
-        this.waitForElementAndClick(MY_LIST_NOT_NOW_BUTTON,"Cannot find 'NOT NOW' button",5);
+        if(Platform.getInstance().isAndroid()){
+            this.waitForElementAndClick(MY_LIST_NOT_NOW_BUTTON,"Cannot find 'NOT NOW' button",5);
+        } else {
+            System.out.println("Method clickNotNowButton() does nothing for platform - " + Platform.getInstance().getPlatformVar());
+        }
         return this;
     }
 
     public MyListPageObject openSavedArticles(String substring)
     {
-        String folderNameXpath = getFolderNameXpath(substring);
-        this.waitForElementAndClick(folderNameXpath,"Cannot find Saved list",5);
-        this.waitForElementPresent(folderNameXpath,"Cannot find saved article",10);
+        if(Platform.getInstance().isAndroid()){
+            String folderNameXpath = getFolderNameXpath(substring);
+            this.waitForElementAndClick(folderNameXpath,"Cannot find Saved list",5);
+            this.waitForElementPresent(folderNameXpath,"Cannot find saved article",10);
+        } else {
+            System.out.println("Method openSavedArticles() does nothing for platform - " + Platform.getInstance().getPlatformVar());
+        }
+
         return this;
     }
 
@@ -31,8 +42,16 @@ public class MyListPageObject extends MainPageObject
     {
         this.waitForArticleToAppearByTitle(articleTitle);
         String articleTitleXpath = getArticleTitleXpath(articleTitle);
-        this.swipeElementToLeft(articleTitleXpath,"Cannot Swipe element");
-        this.waitForArticleToDisappearByTitle(articleTitle);
+
+        if(Platform.getInstance().isMW()) {
+            String removeLocator = getRemoveButtonByTitle(articleTitle);
+            this.waitForElementAndClick(removeLocator, "Cannot find and click remove button", 5);
+            _driver.navigate().refresh();
+        } else {
+            this.swipeElementToLeft(articleTitleXpath,"Cannot Swipe element");
+            this.waitForArticleToDisappearByTitle(articleTitle);
+        }
+
         return this;
     }
 
@@ -66,6 +85,11 @@ public class MyListPageObject extends MainPageObject
     private static String getArticleTitleXpath(String articleTitle)
     {
         return ARTICLE_TITLE_TPL.replace("{ARTICLE_TITLE}", articleTitle);
+    }
+
+    private static String getRemoveButtonByTitle(String articleTitle)
+    {
+        return REMOVE_FROM_SAVE_BUTTON.replace("{ARTICLE_TITLE}", articleTitle);
     }
     /*TEMPLATE METHODS*/
 }

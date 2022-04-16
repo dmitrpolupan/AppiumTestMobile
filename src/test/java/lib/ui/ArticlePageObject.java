@@ -7,8 +7,9 @@ public class ArticlePageObject extends MainPageObject
 {
     protected static String
             TITLE,
-            SAVED_ICON,
+            OPTION_ADD_TO_MY_LIST_BUTTON,
             ADD_TO_MY_LIST_OVERLAY,
+            OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
             MY_LIST_NAME_INPUT,
             MY_LIST_OK_BUTTON,
             MY_LIST_FOLDER_NAME,
@@ -48,7 +49,7 @@ public class ArticlePageObject extends MainPageObject
 
     public ArticlePageObject clickSavedIconAndClickOverlay()
     {
-        this.waitForElementAndClick(SAVED_ICON,"Cannot find button to click button for saving article",5);
+        this.addArticleToMySaved();
         this.waitForElementAndClick(ADD_TO_MY_LIST_OVERLAY,"Cannot find link to init saving article process",5);
         return this;
     }
@@ -58,6 +59,27 @@ public class ArticlePageObject extends MainPageObject
         this.clickSavedIconAndClickOverlay();
         this.waitForElementAndSendKeys(MY_LIST_NAME_INPUT, savedName,"Cannot find input field for entering text for article",5);
         this.waitForElementAndClick(MY_LIST_OK_BUTTON,"Cannot find Ok button to save article",5);
+    }
+
+    public void addArticleToMySaved()
+    {
+        if(Platform.getInstance().isMW()){
+            this.removeArticleFromSavedIfItAdded();
+        }
+        this.waitForElementAndClick(OPTION_ADD_TO_MY_LIST_BUTTON,"Cannot find button to click button for saving article",5);
+    }
+
+    public void removeArticleFromSavedIfItAdded()
+    {
+        if(this.isElementPresent(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON)){
+            this.waitForElementAndClick(
+                    OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
+                    "Cannot click button to remove an article from saved",
+                    5);
+        }
+        this.waitForElementPresent(
+                OPTION_ADD_TO_MY_LIST_BUTTON,
+                "Cannot find button to add an article to saved list after removing it from this list before");
     }
 
     public ArticlePageObject moveToSpecifiedFolder(String folderName)
