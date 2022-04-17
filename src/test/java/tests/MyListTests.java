@@ -1,4 +1,6 @@
 package tests;
+import io.qameta.allure.*;
+import io.qameta.allure.junit4.DisplayName;
 import lib.CoreTestCase;
 import lib.Platform;
 import lib.ui.*;
@@ -9,9 +11,15 @@ import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+@Epic("Tests for MyList")
 public class MyListTests extends CoreTestCase
 {
     @Test
+    @Features(value = {@Feature(value = "MyList"), @Feature(value = "Search"), @Feature(value = "Authorization"), @Feature(value = "Article")})
+    @DisplayName("Save first articles to My List")
+    @Description("Check that first articles from result saves to MyList")
+    @Step("Starting test testSaveFirstArticleToMyList")
+    @Severity(value = SeverityLevel.BLOCKER)
     public void testSaveFirstArticleToMyList() {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(_driver);
         ArticlePageObject ArticlePageObject = ArticlePageObjectFactory.get(_driver);
@@ -43,7 +51,7 @@ public class MyListTests extends CoreTestCase
 
             ArticlePageObject.waitForTitleElement();
 
-            assertEquals("We are not on the same page after login.",
+            Assert.assertEquals("We are not on the same page after login.",
                     articleName,
                     ArticlePageObject.getArticleTitle());
         }
@@ -61,6 +69,11 @@ public class MyListTests extends CoreTestCase
     }
 
     @Test
+    @Features(value = {@Feature(value = "MyList"), @Feature(value = "Search"), @Feature(value = "Authorization"), @Feature(value = "Article")})
+    @DisplayName("Save two articles and removing one from My List")
+    @Description("Check that two articles can be saved to MyList and one from them can be removed")
+    @Step("Starting test testSavingTwoArticles")
+    @Severity(value = SeverityLevel.CRITICAL)
     public void testSavingTwoArticles()
     {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(_driver);
@@ -103,7 +116,7 @@ public class MyListTests extends CoreTestCase
 
             String actualTitleName = ArticlePageObject.getArticleTitle();
 
-            assertEquals("Actual article name is not equal to expected one", articleName1, actualTitleName);
+            Assert.assertEquals("Actual article name is not equal to expected one", articleName1, actualTitleName);
         } else if (Platform.getInstance().isMW()){
             ArticlePageObject.addArticleToMySaved();
             AuthorizationPageObject authorization = new AuthorizationPageObject(_driver);
@@ -116,7 +129,7 @@ public class MyListTests extends CoreTestCase
 
             ArticlePageObject.waitForTitleElement();
 
-            assertEquals("We are not on the same page after login.",
+            Assert.assertEquals("We are not on the same page after login.",
                     articleName1,
                     ArticlePageObject.getArticleTitle());
 

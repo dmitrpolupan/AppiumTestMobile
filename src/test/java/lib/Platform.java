@@ -104,8 +104,8 @@ public class Platform
 
     private boolean isPlatform(String myPlatform)
     {
-        //String platform = this.getPlatformVar();
-        String platform = PLATFORM_MOBILE_WEB;
+        String platform = this.getPlatformVar();
+        //String platform = PLATFORM_MOBILE_WEB;
         return myPlatform.equals(platform);
     }
 
